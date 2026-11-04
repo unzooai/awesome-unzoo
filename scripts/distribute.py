@@ -172,8 +172,10 @@ def publish(plan, name, notes, prerelease, draft, runner=gh):
         if prerelease or '-' in plan['version']:
             args.append('--prerelease')
         runner(*args)
-        # gh api takes an endpoint, but does not accept the release commands' --repo flag.
-        uploaded = json.loads(runner('api', f'repos/{REPO}/releases/tags/{plan["tag"]}'))['assets']
+        # The REST tag endpoint excludes draft releases. gh release view resolves
+        # drafts as well; use the numeric id to read their uploaded asset digests.
+        release_id = json.loads(runner('release', 'view', plan['tag'], '--json', 'databaseId'))['databaseId']
+        uploaded = json.loads(runner('api', f'repos/{REPO}/releases/{release_id}'))['assets']
         expected = {p.name: p for p in stage.iterdir() if p != notes_file}
         if {a['name'] for a in uploaded} != set(expected):
             raise ValueError('Uploaded asset list mismatch; release remains a draft')

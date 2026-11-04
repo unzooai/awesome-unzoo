@@ -98,6 +98,8 @@ class DistributionTests(unittest.TestCase):
             calls = []
             def gh(*args):
                 calls.append(args)
+                if args[:2] == ('release', 'view'):
+                    return json.dumps({'databaseId': 123})
                 if args[0] == 'api':
                     return json.dumps({'assets': []})
                 return ''
@@ -127,7 +129,11 @@ class DistributionTests(unittest.TestCase):
                     sums = next(p for p in files if p.name == 'SHA256SUMS.txt').read_text()
                     self.assertIn('  app.apk\n', sums)
                     self.assertIn('  release.json\n', sums)
+                if args[:2] == ('release', 'view'):
+                    return json.dumps({'databaseId': 123})
                 if args[0] == 'api':
+                    # The tag endpoint returns 404 for drafts; verify assets by release id.
+                    self.assertEqual(args[1], 'repos/unzooai/awesome-unzoo/releases/123')
                     return json.dumps({'assets': uploaded})
                 return ''
             m.publish(plan, 'Alpha', 'notes', False, False, gh)
@@ -146,6 +152,8 @@ class DistributionTests(unittest.TestCase):
                         path = Path(value)
                         if path.is_file() and path.name != 'notes.md':
                             uploaded.append(dict(name=path.name, size=path.stat().st_size, digest='sha256:wrong'))
+                if args[:2] == ('release', 'view'):
+                    return json.dumps({'databaseId': 123})
                 if args[0] == 'api':
                     return json.dumps({'assets': uploaded})
                 return ''
