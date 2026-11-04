@@ -9,7 +9,32 @@
         "macOS 11+ · Apple Silicon (arm64)"
       ],
       "license": "MIT（依据安装包内 package.json 的许可证声明）",
-      "latest": null,
+      "latest": {
+        "version": "0.1.0",
+        "tag": "fq-story-move/v0.1.0",
+        "url": "https://github.com/unzooai/awesome-unzoo/releases/tag/fq-story-move/v0.1.0",
+        "published_at": "2026-11-04T08:06:31Z",
+        "assets": [
+          {
+            "name": "fq-story-move-0.1.0-arm64.dmg",
+            "size": 109674491,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/fq-story-move-0.1.0-arm64.dmg",
+            "digest": "sha256:19a46833e71667a958a7b768bdb23b7587f68047df544851e953d231e0deed4b"
+          },
+          {
+            "name": "release.json",
+            "size": 275,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/release.json",
+            "digest": "sha256:833d57b0d1428636f18fd8bdd164b9c46855bf4e6758ac15bba51d2f164f09a4"
+          },
+          {
+            "name": "SHA256SUMS.txt",
+            "size": 175,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/SHA256SUMS.txt",
+            "digest": "sha256:88cc52c43ce6e4bf0acdae0d58c019ac8253f45479f858f95fb6d1cdc833463b"
+          }
+        ]
+      },
       "preview": null
     }
   ]
