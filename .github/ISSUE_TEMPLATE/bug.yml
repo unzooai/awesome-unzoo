@@ -1,0 +1,24 @@
+name: 软件问题反馈
+description: 报告安装、运行或下载问题
+body:
+  - type: input
+    id: software
+    attributes:
+      label: 软件名称与版本
+      placeholder: 例如 My App 1.2.3
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 系统与设备
+      placeholder: 例如 Windows 11 x64 / Android 14
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 问题描述与复现步骤
+      description: 请提供预期结果、实际结果和必要截图；日志中请移除账号、令牌等隐私信息。
+    validations:
+      required: true
