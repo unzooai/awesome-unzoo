@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "fq-story-move",
+    "name": "番茄搬运工",
+    "description": "将自己的本地小说批量发布到番茄小说创作后台，支持排期、章节同步和进度管理。",
+    "platforms": [
+      "macOS 11+ · Apple Silicon (arm64)"
+    ],
+    "license": "MIT（依据安装包内 package.json 的许可证声明）"
+  }
+]
