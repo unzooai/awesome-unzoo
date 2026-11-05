@@ -8,7 +8,7 @@ Unzoo 软件分发中心。这里提供安装包、版本更新说明和下载�
 
 | 软件 | 简介 | 平台 | 稳定版 | 预览版 |
 | --- | --- | --- | --- | --- |
-| 番茄搬运工 | 将自己的本地小说批量发布到番茄小说创作后台，支持排期、章节同步和进度管理。 | macOS 11+ · Apple Silicon (arm64) | [0.1.0](https://github.com/unzooai/awesome-unzoo/releases/tag/fq-story-move/v0.1.0) | 待发布 |
+| 番茄搬运工 | 将自己的本地小说批量发布到番茄小说创作后台，支持排期、章节同步和进度管理。 | macOS 11+ · Apple Silicon (arm64) / Windows 10 / 11 · x64 | [0.1.0](https://github.com/unzooai/awesome-unzoo/releases/tag/fq-story-move/v0.1.0) | 待发布 |
 
 <!-- catalog:end -->
 
