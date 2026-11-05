@@ -11,28 +11,34 @@
       ],
       "license": "MIT（依据安装包内 package.json 的许可证声明）",
       "latest": {
-        "version": "0.1.0",
-        "tag": "fq-story-move/v0.1.0",
-        "url": "https://github.com/unzooai/awesome-unzoo/releases/tag/fq-story-move/v0.1.0",
-        "published_at": "2026-11-04T08:06:31Z",
+        "version": "0.1.3",
+        "tag": "fq-story-move/v0.1.3",
+        "url": "https://github.com/unzooai/awesome-unzoo/releases/tag/fq-story-move/v0.1.3",
+        "published_at": "2026-11-05T02:04:29Z",
         "assets": [
           {
+            "name": "fq-story-move-0.1.3-arm64.dmg",
+            "size": 128081004,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/fq-story-move-0.1.3-arm64.dmg",
+            "digest": "sha256:19624ee00e48e0796a30e833b409e6dd0eb8d748de42208b3a623ce6d93435a9"
+          },
+          {
+            "name": "fq-story-move-0.1.3-windows-x64-setup.exe",
+            "size": 89937803,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/fq-story-move-0.1.3-windows-x64-setup.exe",
+            "digest": "sha256:c2a52d4bd4db888c148d0e729759b374fba1a7ef03c24838b9a0516ea1974a97"
+          },
+          {
             "name": "release.json",
-            "size": 275,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/release.json",
-            "digest": "sha256:833d57b0d1428636f18fd8bdd164b9c46855bf4e6758ac15bba51d2f164f09a4"
+            "size": 454,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/release.json",
+            "digest": "sha256:fe95786a029f8489787c7813569c9c4a0dabe1a78b03c99e00683cc9e21cc2a9"
           },
           {
             "name": "SHA256SUMS.txt",
-            "size": 175,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/SHA256SUMS.txt",
-            "digest": "sha256:88cc52c43ce6e4bf0acdae0d58c019ac8253f45479f858f95fb6d1cdc833463b"
-          },
-          {
-            "name": "fq-story-move-0.1.0-arm64.dmg",
-            "size": 109674491,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/fq-story-move-0.1.0-arm64.dmg",
-            "digest": "sha256:19a46833e71667a958a7b768bdb23b7587f68047df544851e953d231e0deed4b"
+            "size": 283,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/SHA256SUMS.txt",
+            "digest": "sha256:b95d09d95bedb1fc05c31b5a3114a21bddbee4ef9e5c23a801bf17f4cb317000"
           }
         ]
       },
