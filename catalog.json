@@ -17,12 +17,6 @@
         "published_at": "2026-11-04T08:06:31Z",
         "assets": [
           {
-            "name": "fq-story-move-0.1.0-arm64.dmg",
-            "size": 109674491,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/fq-story-move-0.1.0-arm64.dmg",
-            "digest": "sha256:19a46833e71667a958a7b768bdb23b7587f68047df544851e953d231e0deed4b"
-          },
-          {
             "name": "release.json",
             "size": 275,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/release.json",
@@ -33,6 +27,12 @@
             "size": 175,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/SHA256SUMS.txt",
             "digest": "sha256:88cc52c43ce6e4bf0acdae0d58c019ac8253f45479f858f95fb6d1cdc833463b"
+          },
+          {
+            "name": "fq-story-move-0.1.0-arm64.dmg",
+            "size": 109674491,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.0/fq-story-move-0.1.0-arm64.dmg",
+            "digest": "sha256:19a46833e71667a958a7b768bdb23b7587f68047df544851e953d231e0deed4b"
           }
         ]
       },
