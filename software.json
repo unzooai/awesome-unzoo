@@ -8,5 +8,25 @@
       "Windows 10 / 11 · x64"
     ],
     "license": "MIT（依据安装包内 package.json 的许可证声明）"
+  },
+  {
+    "id": "content-matrix",
+    "name": "ContentMatrix",
+    "description": "通过 Unzoo 浏览器将图文内容发布到头条、百家号、大鱼号和企鹅号，管理账号、素材与发布任务。",
+    "platforms": [
+      "macOS 11+ · Apple Silicon (arm64)",
+      "Windows 10 / 11 · x64"
+    ],
+    "license": "MIT（主应用，依据上游 LICENSE；第三方组件遵循各自许可证）"
+  },
+  {
+    "id": "xhs-matrix",
+    "name": "XhsMatrix",
+    "description": "通过 Unzoo 浏览器管理小红书账号、素材、内容派生、发布排期和养号任务。",
+    "platforms": [
+      "macOS 12+ · Apple Silicon (arm64)",
+      "Windows 10 / 11 · x64"
+    ],
+    "license": "MIT（主应用，依据上游 LICENSE；捆绑的 FFmpeg、mihomo 等第三方组件遵循各自许可证）"
   }
 ]
