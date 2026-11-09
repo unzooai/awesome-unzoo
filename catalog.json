@@ -53,7 +53,32 @@
         "Windows 10 / 11 · x64"
       ],
       "license": "MIT（主应用，依据上游 LICENSE；第三方组件遵循各自许可证）",
-      "latest": null,
+      "latest": {
+        "version": "0.0.11",
+        "tag": "content-matrix/v0.0.11",
+        "url": "https://github.com/unzooai/awesome-unzoo/releases/tag/content-matrix/v0.0.11",
+        "published_at": "2026-11-09T07:41:32Z",
+        "assets": [
+          {
+            "name": "ContentMatrix_0.0.11_x64-setup.exe",
+            "size": 22517732,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/ContentMatrix_0.0.11_x64-setup.exe",
+            "digest": "sha256:1b3d9c13c891d83ae910dddb842a10a154d7be2d1b8537e97212ac97ec6a5821"
+          },
+          {
+            "name": "release.json",
+            "size": 283,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/release.json",
+            "digest": "sha256:f8f7add47a2c66e46dced4209ef7fe4ba2ab51fd61e88567fffbc3eb41741797"
+          },
+          {
+            "name": "SHA256SUMS.txt",
+            "size": 180,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/SHA256SUMS.txt",
+            "digest": "sha256:a8d2b1eab31f0d8a988049570f9c833ad79e01f2912bbc95feeeee523dda1f29"
+          }
+        ]
+      },
       "preview": null
     },
     {
