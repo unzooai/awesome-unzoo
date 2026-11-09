@@ -6,9 +6,30 @@
 
 > 发布「软件名」，版本 1.2.3，安装包在 `/绝对路径/app-1.2.3-android-arm64.apk`，更新内容是……
 
-首次发布还需给出简介、支持的平台、软件许可说明。包名、包内版本、签名是否正确需按具体软件检查；此仓库不构建或签名软件。
+首次发布还需给出简介、支持的平台、软件许可说明。包名、包内版本、签名是否正确需按具体软件检查；应用构建和签名在仓库外完成，最终安装包通过 Releases 分发。
 
 维护流程：登记软件 → 提交登记信息 → 检查安装包 → 生成 SHA-256 → 创建草稿并上传 → 检查远端文件清单、大小及 GitHub 返回的摘要 → 公开发布 → 自动更新目录。日常只需提供软件与安装包，无需把软件源代码放入本仓库。
+
+## 从上游 Releases 同步
+
+配置 `awesome-unzoo-sync` 技能后，可在 Codex 中直接提供上游 GitHub 仓库地址并要求同步，也可显式使用：
+
+> 使用 $awesome-unzoo-sync，将 https://github.com/OWNER/REPO 的最新安装包同步到 awesome-unzoo，Mac 包完成签名和 Apple 公证后发布。
+
+技能检查各平台最新实际构建包和已有发布，核对原包摘要及内部身份、版本、架构和许可，为 Mac 包完成 Developer ID 签名、公证及票据装订后，通过本仓库的发布工具上传，并验证远端目录。Windows 包按原包的实际签名状态说明。
+
+各平台可能对应不同版本。例如最新 Release 只有 Windows 包、较早的 Release 才有 Mac 包时，应分别按真实版本发布，并在软件使用说明中给出各自下载入口。已公开的同版本文件保持原样；替换已发布平台包的签名状态，需要先确定新的分发版本方案。
+
+上游为同一版本后补另一个平台的包时，可用 `attach` 在已有 Release 增加新文件，保留此前所有资产和标签：
+
+```sh
+python3 scripts/distribute.py attach SOFTWARE_ID VERSION inbox/NEW_PLATFORM_INSTALLER \
+  --suffix macos --notes-file inbox/notes.md --dry-run
+python3 scripts/distribute.py attach SOFTWARE_ID VERSION inbox/NEW_PLATFORM_INSTALLER \
+  --suffix macos --notes-file inbox/notes.md
+```
+
+新增部分附带独立的 `release-macos.json` 和 `SHA256SUMS-macos.txt`，不覆盖原 `release.json`、校验清单或安装包。待新增的同名文件若已存在但摘要不同、缺少摘要或上传未完成，工具会停止；重复运行只跳过内容一致的已上传文件，不会覆盖。默认追加带标记的更新说明；确需清理原说明中的过时平台信息时，用完整新说明文件配合 `--replace-notes`，工具核验上传结果后才更新正文。
 
 ## 目录
 

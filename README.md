@@ -23,10 +23,12 @@ Unzoo 软件分发中心。这里提供安装包、版本更新说明和下载�
 ## 软件使用说明
 
 - [番茄搬运工](docs/software/fq-story-move.md)：将自己的本地小说批量发布到番茄小说创作后台，支持排期、章节同步和进度管理。
+- [ContentMatrix](docs/software/content-matrix.md)：头条、百家号、大鱼号、企鹅号的图文分发与任务管理。
+- [XhsMatrix](docs/software/xhs-matrix.md)：小红书账号、素材、内容派生、发布排期和养号任务管理。
 
 ## 校验下载
 
-下载所需安装包与同版本的 `SHA256SUMS.txt`，在同一文件夹内校验：
+下载所需安装包与对应校验清单，在同一文件夹内校验。通常使用 `SHA256SUMS.txt`；同版本后补的平台包可能使用 `SHA256SUMS-macos.txt` 等独立清单，请以该版本说明为准。
 
 ```sh
 # macOS / Linux：将 app.apk 替换为实际文件名，与 SHA256SUMS.txt 中对应的一行比较

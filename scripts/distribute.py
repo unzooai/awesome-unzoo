@@ -20,6 +20,16 @@ VERSION = re.compile(r'(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-([0-
 RESERVED = {'SHA256SUMS.txt', 'release.json'}
 
 
+def is_metadata(name):
+    return name in RESERVED or bool(re.fullmatch(r'(?:release-[a-z0-9-]+\.json|SHA256SUMS-[a-z0-9-]+\.txt)', name))
+
+
+def supplement_metadata(suffix):
+    if not ID.fullmatch(suffix):
+        raise ValueError('Supplement suffix must be an id such as macos')
+    return f'release-{suffix}.json', f'SHA256SUMS-{suffix}.txt'
+
+
 def validate_products(products):
     if not isinstance(products, list):
         raise ValueError('software.json must contain an array')
@@ -59,7 +69,7 @@ def plan_release(product_id, version, files):
         path = Path(item).resolve()
         if not path.is_file() or not 0 < path.stat().st_size < 2 * 1024**3:
             raise ValueError(f'Asset must exist, be nonempty, and be smaller than 2 GiB: {path}')
-        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._+-]*', path.name) or path.name in names:
+        if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._+-]*', path.name) or path.name in names or is_metadata(path.name):
             raise ValueError(f'Unsafe, duplicate, or reserved asset filename: {path.name}')
         names.add(path.name)
         assets.append(dict(path=str(path), name=path.name, size=path.stat().st_size, sha256=digest(path)))
@@ -106,7 +116,7 @@ def build_catalog(products, releases):
             version = release['tag_name'][len(prefix):]
             match = VERSION.fullmatch(version)
             assets = release.get('assets', [])
-            if not match or not any(a['name'] not in RESERVED for a in assets):
+            if not match or not any(not is_metadata(a['name']) for a in assets):
                 continue
             channel = 'preview' if release.get('prerelease') or match[4] else 'latest'
             value = dict(version=version, tag=release['tag_name'], url=release['html_url'],
@@ -188,6 +198,73 @@ def publish(plan, name, notes, prerelease, draft, runner=gh):
         print(f'https://github.com/{REPO}/releases/tag/{plan["tag"]}')
 
 
+def attach(plan, suffix, notes, replace_notes=False, runner=gh):
+    """Add a new platform to a published version without replacing any assets."""
+    manifest_name, sums_name = supplement_metadata(suffix)
+    release_id = json.loads(runner('release', 'view', plan['tag'], '--json', 'databaseId'))['databaseId']
+    endpoint = f'repos/{REPO}/releases/{release_id}'
+    remote = json.loads(runner('api', endpoint))
+    if remote.get('draft') or remote.get('tag_name') != plan['tag']:
+        raise ValueError('Supplement requires the exact existing, published release')
+    original = {a['name']: a for a in remote['assets']}
+    with tempfile.TemporaryDirectory(prefix='unzoo-supplement-') as tmp:
+        stage = Path(tmp)
+        for asset in plan['assets']:
+            target = stage / asset['name']
+            shutil.copyfile(asset['path'], target)
+            if digest(target) != asset['sha256']:
+                raise ValueError('Asset changed while staging; nothing uploaded')
+        manifest = {k: v for k, v in plan.items() if k != 'assets'}
+        manifest['supplement'] = suffix
+        manifest['assets'] = [{k: v for k, v in a.items() if k != 'path'}
+                              for a in sorted(plan['assets'], key=lambda a: a['name'])]
+        (stage / manifest_name).write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
+        (stage / sums_name).write_text(''.join(f'{digest(p)}  {p.name}\n' for p in sorted(stage.iterdir())))
+        expected = {p.name: p for p in stage.iterdir()}
+
+        def verify(asset, path):
+            if (asset.get('state') != 'uploaded' or asset['size'] != path.stat().st_size
+                    or asset.get('digest') != 'sha256:' + digest(path)):
+                raise ValueError(f'Existing or uploaded asset differs or is incomplete; never replaced: {path.name}')
+
+        missing = []
+        for name, path in expected.items():
+            if name in original:
+                verify(original[name], path)
+            else:
+                missing.append(str(path))
+        if missing:
+            runner('release', 'upload', plan['tag'], *sorted(missing))
+        uploaded = json.loads(runner('api', endpoint))
+        if uploaded.get('draft') or uploaded.get('tag_name') != plan['tag']:
+            raise ValueError('Release identity or publication state changed during upload')
+        current = {a['name']: a for a in uploaded['assets']}
+        for name, before in original.items():
+            after = current.get(name)
+            if after is None or any(after.get(k) != before.get(k) for k in ('id', 'size', 'digest', 'state')):
+                raise ValueError('Existing release assets changed during supplement upload')
+        for name, path in expected.items():
+            if name not in current:
+                raise ValueError(f'Supplement upload incomplete: {name}; retry only after inspecting remote state')
+            verify(current[name], path)
+        marker = f'<!-- supplement:{suffix} -->'
+        body = uploaded.get('body') or ''
+        if replace_notes:
+            updated = notes.strip()
+            if marker not in updated:
+                updated += '\n\n' + marker
+            updated += '\n'
+        elif marker not in body:
+            updated = body.rstrip() + '\n\n' + marker + '\n\n' + notes.strip() + '\n'
+        else:
+            updated = body
+        if updated != body:
+            notes_file = stage / '.notes-for-edit.md'
+            notes_file.write_text(updated)
+            runner('release', 'edit', plan['tag'], '--notes-file', str(notes_file))
+        print(f'https://github.com/{REPO}/releases/tag/{plan["tag"]}')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
@@ -204,6 +281,14 @@ def main():
     release.add_argument('--notes-file', type=Path, required=True)
     for flag in ('dry-run', 'prerelease', 'draft'):
         release.add_argument('--' + flag, action='store_true')
+    supplement = commands.add_parser('attach', help='Append a new platform to an existing release without overwriting assets')
+    supplement.add_argument('id')
+    supplement.add_argument('version')
+    supplement.add_argument('files', nargs='+', type=Path)
+    supplement.add_argument('--suffix', required=True)
+    supplement.add_argument('--notes-file', type=Path, required=True)
+    supplement.add_argument('--replace-notes', action='store_true')
+    supplement.add_argument('--dry-run', action='store_true')
     args = parser.parse_args()
     products = load_products()
     if args.command == 'add':
@@ -224,8 +309,11 @@ def main():
         if not notes.strip():
             raise ValueError('Release notes cannot be empty')
         plan = plan_release(args.id, args.version, args.files)
+        if args.command == 'attach':
+            supplement_metadata(args.suffix)
         if args.dry_run:
-            print(json.dumps(plan, ensure_ascii=False, indent=2))
+            output = dict(plan, supplement=args.suffix, metadata=list(supplement_metadata(args.suffix))) if args.command == 'attach' else plan
+            print(json.dumps(output, ensure_ascii=False, indent=2))
         else:
             # Require the remote metadata before any upload, so automation can identify the software.
             remote = api(f'/repos/{REPO}/contents/software.json?ref=main')
@@ -233,9 +321,13 @@ def main():
             registered = json.loads(base64.b64decode(remote['content']))
             if product not in registered:
                 raise ValueError('Commit and push the current software metadata before publishing')
-            publish(plan, product['name'], notes, args.prerelease, args.draft)
-            if not args.draft:
+            if args.command == 'attach':
+                attach(plan, args.suffix, notes, args.replace_notes)
                 sync()
+            else:
+                publish(plan, product['name'], notes, args.prerelease, args.draft)
+                if not args.draft:
+                    sync()
 
 
 if __name__ == '__main__':

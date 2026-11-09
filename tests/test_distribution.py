@@ -161,6 +161,114 @@ class DistributionTests(unittest.TestCase):
                 m.publish(m.plan_release('alpha', '1.0.0', [asset]), 'Alpha', 'notes', False, False, gh)
             self.assertFalse(any(c[:2] == ('release', 'edit') for c in calls))
 
+    def supplement_runner(self, module, *, draft=False, tag='alpha/v1.0.0', corrupt=False):
+        remote = dict(tag_name=tag, draft=draft, body='Original Windows release notes',
+                      assets=[dict(id=1, name='windows.exe', size=7, digest='sha256:original', state='uploaded')])
+        calls = []
+        def runner(*args):
+            calls.append(args)
+            if args[:2] == ('release', 'view'):
+                return json.dumps({'databaseId': 321})
+            if args[0] == 'api':
+                self.assertEqual(args[1], 'repos/unzooai/awesome-unzoo/releases/321')
+                return json.dumps(remote)
+            if args[:2] == ('release', 'upload'):
+                self.assertNotIn('--clobber', args)
+                for value in args[3:]:
+                    path = Path(value)
+                    self.assertNotIn(path.name, {a['name'] for a in remote['assets']})
+                    if path.name == 'release-macos.json':
+                        manifest = json.loads(path.read_text())
+                        self.assertEqual(manifest['supplement'], 'macos')
+                        self.assertTrue(all('path' not in a for a in manifest['assets']))
+                    if path.name == 'SHA256SUMS-macos.txt':
+                        self.assertIn('  release-macos.json\n', path.read_text())
+                    digest = 'sha256:wrong' if corrupt and path.suffix == '.dmg' else 'sha256:' + module.digest(path)
+                    remote['assets'].append(dict(id=len(remote['assets']) + 1, name=path.name,
+                                                 size=path.stat().st_size, digest=digest, state='uploaded'))
+                return ''
+            if args[:2] == ('release', 'edit'):
+                remote['body'] = Path(args[args.index('--notes-file') + 1]).read_text()
+                return ''
+            self.fail(f'Unexpected command: {args}')
+        return runner, calls, remote
+
+    def test_supplement_adds_mac_without_replacing_windows_and_retries_idempotently(self):
+        m = self.load()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            asset = root / 'mac.dmg'; asset.write_bytes(b'abc')
+            provenance = root / 'provenance.json'; provenance.write_text('{}\n')
+            runner, calls, remote = self.supplement_runner(m)
+            before = dict(remote['assets'][0])
+            m.attach(m.plan_release('alpha', '1.0.0', [asset, provenance]), 'macos', 'Mac signed and notarized', runner=runner)
+            self.assertEqual(remote['assets'][0], before)
+            self.assertIn('Original Windows release notes', remote['body'])
+            self.assertIn('Mac signed and notarized', remote['body'])
+            self.assertEqual(remote['body'].count('<!-- supplement:macos -->'), 1)
+            # Reordered arguments must not change generated manifests or re-upload assets.
+            m.attach(m.plan_release('alpha', '1.0.0', [provenance, asset]), 'macos', 'Mac signed and notarized', runner=runner)
+            self.assertEqual(sum(c[:2] == ('release', 'upload') for c in calls), 1)
+            self.assertEqual(sum(c[:2] == ('release', 'edit') for c in calls), 1)
+            self.assertEqual(asset.read_bytes(), b'abc')
+
+    def test_supplement_rejects_existing_binary_collision_or_missing_digest(self):
+        m = self.load()
+        with tempfile.TemporaryDirectory() as tmp:
+            asset = Path(tmp) / 'mac.dmg'; asset.write_bytes(b'abc')
+            for digest in ['sha256:different', None]:
+                runner, calls, remote = self.supplement_runner(m)
+                remote['assets'].append(dict(id=2, name=asset.name, size=3, digest=digest, state='uploaded'))
+                with self.assertRaisesRegex(ValueError, 'never replaced'):
+                    m.attach(m.plan_release('alpha', '1.0.0', [asset]), 'macos', 'notes', runner=runner)
+                self.assertFalse(any(c[:2] in [('release', 'upload'), ('release', 'edit')] for c in calls))
+
+    def test_supplement_requires_exact_published_tag(self):
+        m = self.load()
+        with tempfile.TemporaryDirectory() as tmp:
+            asset = Path(tmp) / 'mac.dmg'; asset.write_bytes(b'abc')
+            for options in [dict(draft=True), dict(tag='alpha/v1.0.1')]:
+                runner, calls, remote = self.supplement_runner(m, **options)
+                with self.assertRaisesRegex(ValueError, 'exact existing, published release'):
+                    m.attach(m.plan_release('alpha', '1.0.0', [asset]), 'macos', 'notes', runner=runner)
+                self.assertFalse(any(c[:2] == ('release', 'upload') for c in calls))
+
+    def test_supplement_remote_corruption_prevents_notes_update(self):
+        m = self.load()
+        with tempfile.TemporaryDirectory() as tmp:
+            asset = Path(tmp) / 'mac.dmg'; asset.write_bytes(b'abc')
+            runner, calls, remote = self.supplement_runner(m, corrupt=True)
+            before = dict(remote['assets'][0])
+            with self.assertRaisesRegex(ValueError, 'never replaced'):
+                m.attach(m.plan_release('alpha', '1.0.0', [asset]), 'macos', 'notes', runner=runner)
+            self.assertEqual(remote['assets'][0], before)
+            self.assertFalse(any(c[:2] == ('release', 'edit') for c in calls))
+
+    def test_supplement_can_replace_obsolete_notes_only_after_verified_upload(self):
+        m = self.load()
+        with tempfile.TemporaryDirectory() as tmp:
+            asset = Path(tmp) / 'mac.dmg'; asset.write_bytes(b'abc')
+            runner, calls, remote = self.supplement_runner(m)
+            m.attach(m.plan_release('alpha', '1.0.0', [asset]), 'macos', 'Updated combined-platform notes',
+                     replace_notes=True, runner=runner)
+            self.assertNotIn('Original Windows release notes', remote['body'])
+            self.assertIn('Updated combined-platform notes', remote['body'])
+            self.assertEqual(calls[-1][:2], ('release', 'edit'))
+
+    def test_supplement_metadata_is_reserved_and_not_an_installer(self):
+        m = self.load()
+        release = self.release('alpha/v1.0.0')
+        release['assets'] = [dict(name=n, size=1) for n in ['release-macos.json', 'SHA256SUMS-macos.txt']]
+        self.assertIsNone(m.build_catalog([{'id': 'alpha'}], [release])[0]['latest'])
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in ['release-macos.json', 'SHA256SUMS-macos.txt']:
+                path = Path(tmp) / name; path.write_text('metadata')
+                with self.assertRaises(ValueError):
+                    m.plan_release('alpha', '1.0.0', [path])
+        for suffix in ['../macos', 'macos/v1', '', '--macos']:
+            with self.assertRaises(ValueError):
+                m.supplement_metadata(suffix)
+
 
 if __name__ == '__main__':
     unittest.main()
