@@ -17,6 +17,18 @@
         "published_at": "2026-11-05T02:04:29Z",
         "assets": [
           {
+            "name": "SHA256SUMS.txt",
+            "size": 283,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/SHA256SUMS.txt",
+            "digest": "sha256:b95d09d95bedb1fc05c31b5a3114a21bddbee4ef9e5c23a801bf17f4cb317000"
+          },
+          {
+            "name": "release.json",
+            "size": 454,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/release.json",
+            "digest": "sha256:fe95786a029f8489787c7813569c9c4a0dabe1a78b03c99e00683cc9e21cc2a9"
+          },
+          {
             "name": "fq-story-move-0.1.3-arm64.dmg",
             "size": 128081004,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/fq-story-move-0.1.3-arm64.dmg",
@@ -27,18 +39,6 @@
             "size": 89937803,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/fq-story-move-0.1.3-windows-x64-setup.exe",
             "digest": "sha256:c2a52d4bd4db888c148d0e729759b374fba1a7ef03c24838b9a0516ea1974a97"
-          },
-          {
-            "name": "release.json",
-            "size": 454,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/release.json",
-            "digest": "sha256:fe95786a029f8489787c7813569c9c4a0dabe1a78b03c99e00683cc9e21cc2a9"
-          },
-          {
-            "name": "SHA256SUMS.txt",
-            "size": 283,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/fq-story-move/v0.1.3/SHA256SUMS.txt",
-            "digest": "sha256:b95d09d95bedb1fc05c31b5a3114a21bddbee4ef9e5c23a801bf17f4cb317000"
           }
         ]
       },
@@ -60,12 +60,6 @@
         "published_at": "2026-11-09T07:41:32Z",
         "assets": [
           {
-            "name": "ContentMatrix_0.0.11_x64-setup.exe",
-            "size": 22517732,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/ContentMatrix_0.0.11_x64-setup.exe",
-            "digest": "sha256:1b3d9c13c891d83ae910dddb842a10a154d7be2d1b8537e97212ac97ec6a5821"
-          },
-          {
             "name": "release.json",
             "size": 283,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/release.json",
@@ -76,6 +70,30 @@
             "size": 180,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/SHA256SUMS.txt",
             "digest": "sha256:a8d2b1eab31f0d8a988049570f9c833ad79e01f2912bbc95feeeee523dda1f29"
+          },
+          {
+            "name": "ContentMatrix_0.0.11_x64-setup.exe",
+            "size": 22517732,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/ContentMatrix_0.0.11_x64-setup.exe",
+            "digest": "sha256:1b3d9c13c891d83ae910dddb842a10a154d7be2d1b8537e97212ac97ec6a5821"
+          },
+          {
+            "name": "release-macos.json",
+            "size": 466,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/release-macos.json",
+            "digest": "sha256:460fc62f5e9339ce22cca2394bdfb35dc46dedfc1aaba96f10b784058592bff4"
+          },
+          {
+            "name": "provenance-macos.json",
+            "size": 1169,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/provenance-macos.json",
+            "digest": "sha256:c38c5657ddd90969f7aacc51a0786a03b534f27d50b15009a3208e5d83c40ffb"
+          },
+          {
+            "name": "SHA256SUMS-macos.txt",
+            "size": 277,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/content-matrix/v0.0.11/SHA256SUMS-macos.txt",
+            "digest": "sha256:fd6f35834598d6db2cd6ac440cfde451d5e5891a4b5012cf16befcc6dd8acdb5"
           }
         ]
       },
@@ -97,6 +115,18 @@
         "published_at": "2026-11-09T08:15:48Z",
         "assets": [
           {
+            "name": "XhsMatrix_1.0.11_x64-setup.exe",
+            "size": 77587903,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/xhs-matrix/v1.0.11/XhsMatrix_1.0.11_x64-setup.exe",
+            "digest": "sha256:e5ff22ad941b64f2d5a92693c87370d25b72ed59e0b75b2dfe5ea00091f06ba8"
+          },
+          {
+            "name": "SHA256SUMS.txt",
+            "size": 358,
+            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/xhs-matrix/v1.0.11/SHA256SUMS.txt",
+            "digest": "sha256:1b800d733c8db14edb1bb38fdd9c8a81db650b20db34918e3158698897a1bfda"
+          },
+          {
             "name": "provenance.json",
             "size": 1366,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/xhs-matrix/v1.0.11/provenance.json",
@@ -109,22 +139,10 @@
             "digest": "sha256:14b9843815addd49597cdd0bb20cf9e6edeefa809eeee633111b27628e54cd32"
           },
           {
-            "name": "SHA256SUMS.txt",
-            "size": 358,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/xhs-matrix/v1.0.11/SHA256SUMS.txt",
-            "digest": "sha256:1b800d733c8db14edb1bb38fdd9c8a81db650b20db34918e3158698897a1bfda"
-          },
-          {
             "name": "xhs-matrix-1.0.11-macos-arm64.dmg",
             "size": 170161594,
             "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/xhs-matrix/v1.0.11/xhs-matrix-1.0.11-macos-arm64.dmg",
             "digest": "sha256:ea3a7cd04d17af0f5239ae3ffc609c4541ecaf095e9186b6dc43d1abc7db3e79"
-          },
-          {
-            "name": "XhsMatrix_1.0.11_x64-setup.exe",
-            "size": 77587903,
-            "browser_download_url": "https://github.com/unzooai/awesome-unzoo/releases/download/xhs-matrix/v1.0.11/XhsMatrix_1.0.11_x64-setup.exe",
-            "digest": "sha256:e5ff22ad941b64f2d5a92693c87370d25b72ed59e0b75b2dfe5ea00091f06ba8"
           }
         ]
       },
